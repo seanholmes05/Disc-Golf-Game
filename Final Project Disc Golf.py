@@ -10,22 +10,27 @@ disc - https://opengameart.org/content/glow-circle
 import simpleGE
 import pygame
 
-class person (simpleGE.BasicSprite):
+class Person (simpleGE.BasicSprite):
     def __init__(self, scene):
         super(). __init__(scene)
         self.setImage ("discPerson.png")
         self.setSize (30,30)
         self.y = (400)
-    def checkEvents(self):
-        if self.scene.isKeyPressed(pygame.K_LEFT):
-            self.turnBy(5)
-        elif self.scene.isKeyPressed(pygame.K_RIGHT):
-            self.turnBy(-5)
         
-class game(simpleGE.Scene):
+class Basket(simpleGE.BasicSprite):
+    def __init__(self, scene):
+        super().__init__(scene)
+        self.setImage("basket.png")
+        self.setSize(40,40)
+        self.y = (200)
+        self.x = (500)
+
+    
+class Game(simpleGE.Scene):
     def __init__(self):
         super().__init__()
-        self.person = person(self)
+        
+        self.background.fill(pygame.Color("papayawhip"))
         
         self.lblScore = simpleGE.Label()
         self.lblScore.text = "Score: 0"
@@ -35,10 +40,18 @@ class game(simpleGE.Scene):
         self.lblHole = simpleGE.Label()
         self.lblHole.text = "Hole #1"
         self.lblHole.center = (550,30)
+        
+        self.person = Person(self)
+        self.basket = Basket(self)
+        self.disc = Disc(self)
+        
+        self.sprites = [self.lblScore, self.lblHole, self.person, self.basket, self.disc]
+        
+
+        
 class Disc(simpleGE.SuperSprite):
-    def __init__(self, scene, parent):
+    def __init__(self, scene,):
         super().__init__(scene)
-        self.parent = parent
         self.setImage("glowCircle.png")
         self.setBoundAction(self.HIDE)
         self.hide()
@@ -46,13 +59,11 @@ class Disc(simpleGE.SuperSprite):
         def throw(self):
             self.show()
             self.setPosition(self.parent.rect.center)
+    
         
         
 def main():
-    game = simpleGE.Scene()
-    game.background.fill("papayawhip")
-    game.person = person(game)
-    game.sprites = [game.person]
+    game = Game()
     game.start()
     
 if __name__ == "__main__":
