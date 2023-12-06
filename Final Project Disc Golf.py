@@ -17,6 +17,7 @@ class Person (simpleGE.BasicSprite):
         self.setImage ("discPerson.png")
         self.setSize (30,30)
         self.y = (400)
+    
         
 
 class Basket(simpleGE.BasicSprite):
@@ -128,28 +129,27 @@ class Game(simpleGE.Scene):
         self.basket = Basket(self)
         self.crosshair = Crosshair(self)
         self.currentDisc = Disc(self, self.person)
-        
-        
-
-        #for i in range(self.NUM_DISCS):
-            #self.disc.append(Disc(self, self.person))
-        self.sprites = [self.lblScore, self.lblHole, self.person, self.basket, self.currentDisc, self.crosshair]
             
-    
+        self.sprites = [self.lblScore, self.lblHole, self.person, self.basket, self.currentDisc, self.crosshair]
+        
     def update(self):
         mousePos = pygame.mouse.get_pos()
-        power = pygame.mouse.get_rel()
         dist = self.currentDisc.distanceTo(mousePos)
+        mouseDir = self.currentDisc.dirTo(mousePos)
         
-        
-        
+        if pygame.mouse.get_pressed() == (1, 0, 0):
+            print("Throw the disc")
+            self.currentDisc.setMoveAngle(mouseDir)
+            self.currentDisc.setSpeed(dist / 2)
+            #self.scene.currentDisc.fire()
+                
     
 class Disc(simpleGE.SuperSprite):
     def __init__(self, scene, parent):
         super().__init__(scene)
         self.parent = parent
-        self.setImage("glowCircle.png")
         self.imageMaster = pygame.Surface((5,5))
+        self.imageMaster.fill(pygame.Color("black"))
         self.setBoundAction(self.HIDE)
         self.hide()
         
@@ -157,7 +157,6 @@ class Disc(simpleGE.SuperSprite):
     def throw(self):
         self.show()
         self.setPosition(self.parent.rect.center)
-        #self.setMoveAngle(self.parent.rotation)
         self.setSpeed(self.scene.scrVelocity.value)
         self.calcVector()
         
