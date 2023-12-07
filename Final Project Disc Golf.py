@@ -11,21 +11,42 @@ import simpleGE
 import pygame
 import math
 
-class Person (simpleGE.BasicSprite):
+class Person (simpleGE.SuperSprite):
     def __init__(self, scene):
         super(). __init__(scene)
         self.setImage ("discPerson.png")
         self.setSize (30,30)
         self.y = (400)
-    
         
+    def checkEvents(self):
+        if self.scene.isKeyPressed(pygame.K_LEFT):
+            self.rotateBy(5)
+        if self.scene.isKeyPressed(pygame.K_RIGHT):
+            self.rotateBy(-5)
+            
+class Tree (simpleGE.BasicSprite):
+    def __init__(self, scene):
+        super().__init__(scene)
+        self.setImage("Tree.png")
+        self.setSize(80,80)
+        self.y = 230
+        self.x = 340
+        
+class Water (simpleGE.BasicSprite):
+    def __init__(self, scene):
+        super().__init__(scene)
+        self.setImage("Water.png")
+        self.setSize(300,300)
+        self.y = 200
+        self.x = 150
+
 
 class Basket(simpleGE.BasicSprite):
     def __init__(self, scene):
         super().__init__(scene)
         self.setImage("basket.png")
         self.setSize(40,40)
-        self.y = (200)
+        self.y = (100)
         self.x = (500)
     
 class Crosshair(simpleGE.BasicSprite):
@@ -129,8 +150,11 @@ class Game(simpleGE.Scene):
         self.basket = Basket(self)
         self.crosshair = Crosshair(self)
         self.currentDisc = Disc(self, self.person)
+        self.tree = Tree(self)
+        self.water = Water(self)
             
-        self.sprites = [self.lblScore, self.lblHole, self.person, self.basket, self.currentDisc, self.crosshair]
+        self.sprites = [self.lblScore, self.lblHole, self.person, self.basket, 
+                        self.currentDisc, self.crosshair, self.tree, self.water]
         
     def update(self):
         mousePos = pygame.mouse.get_pos()
@@ -140,7 +164,7 @@ class Game(simpleGE.Scene):
         if pygame.mouse.get_pressed() == (1, 0, 0):
             print("Throw the disc")
             self.currentDisc.setMoveAngle(mouseDir)
-            self.currentDisc.setSpeed(dist / 2)
+            self.currentDisc.setSpeed(dist)
             #self.scene.currentDisc.fire()
                 
     
